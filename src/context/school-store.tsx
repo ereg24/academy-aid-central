@@ -45,7 +45,7 @@ function reducer(state: State, action: Action): State {
   switch (action.type) {
     case "ADD_STUDENT": {
       const newStudent: Student = {
-        id: uuid(),
+        id: genId(),
         name: action.payload.name.trim(),
         age: action.payload.age,
         phone: action.payload.phone.trim(),
@@ -67,7 +67,7 @@ function reducer(state: State, action: Action): State {
       if (!existing) {
         const periods: [boolean, boolean, boolean] = [false, false, false];
         periods[periodIndex] = present;
-        const newRec: AttendanceRecord = { id: uuid(), studentId, date, periods };
+        const newRec: AttendanceRecord = { id: genId(), studentId, date, periods };
         return { ...state, attendance: [newRec, ...state.attendance] };
       }
       const updated = state.attendance.map((a) =>
