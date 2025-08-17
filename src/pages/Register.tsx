@@ -20,11 +20,11 @@ export default function Register() {
     e.preventDefault();
     const age = Number(form.age);
     const fee = Number(form.fee);
-    if (!form.name.trim() || isNaN(age) || isNaN(fee)) {
-      toast.error("Please provide valid name, age, and fee");
+    if (!form.name.trim() || isNaN(age) || isNaN(fee) || form.phone.length !== 9) {
+      toast.error("Please provide valid name, age, fee, and 9-digit phone number");
       return;
     }
-    addStudent({ name: form.name, age, phone: form.phone, fee, paid: false });
+    addStudent({ name: form.name, age, phone: `+252${form.phone}`, fee, paid: false });
     toast.success("Student registered");
     setForm({ name: "", age: "", phone: "", fee: "" });
   };
@@ -56,11 +56,24 @@ export default function Register() {
             </div>
             <div className="grid gap-2">
               <label className="text-sm">Phone</label>
-              <Input
-                placeholder="e.g. 555-123-4567"
-                value={form.phone}
-                onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
-              />
+              <div className="flex">
+                <span className="inline-flex items-center px-3 text-sm text-muted-foreground bg-muted border border-r-0 border-input rounded-l-md">
+                  +252
+                </span>
+                <Input
+                  placeholder="123456789"
+                  value={form.phone}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, '');
+                    if (value.length <= 9) {
+                      setForm((f) => ({ ...f, phone: value }));
+                    }
+                  }}
+                  className="rounded-l-none"
+                  maxLength={9}
+                  pattern="[0-9]{9}"
+                />
+              </div>
             </div>
           </div>
           <div className="grid gap-2">

@@ -17,7 +17,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <Link to="/" className="font-semibold tracking-tight">
             Academy Aid Central
           </Link>
-          <nav className="hidden items-center gap-1 sm:flex">
+          <nav className="flex items-center gap-1 md:gap-2">
             {navItems.map((n) => (
               <NavLink
                 key={n.to}
