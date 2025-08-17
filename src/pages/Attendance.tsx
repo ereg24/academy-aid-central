@@ -4,6 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Switch } from "@/components/ui/switch";
 import { useSchoolStore, formatDate } from "@/context/school-store";
 import { usePageSEO } from "@/lib/seo";
+import { googleSheetsService } from "@/services/googleSheets";
 
 export default function Attendance() {
   usePageSEO(
@@ -68,14 +69,26 @@ export default function Attendance() {
                           <div className="flex items-center gap-2">
                             <Switch
                               checked={periods[pi as 0 | 1 | 2]}
-                              onCheckedChange={(v) =>
+                              onCheckedChange={async (v) => {
                                 upsertAttendance({
                                   studentId: s.id,
                                   date,
                                   periodIndex: pi as 0 | 1 | 2,
                                   present: v,
-                                })
-                              }
+                                });
+
+                                // Send to Google Sheets
+                                const updatedPeriods = [...periods];
+                                updatedPeriods[pi] = v;
+                                await googleSheetsService.sendAttendanceUpdate({
+                                  studentId: s.id,
+                                  studentName: s.name,
+                                  date,
+                                  period1: updatedPeriods[0],
+                                  period2: updatedPeriods[1],
+                                  period3: updatedPeriods[2],
+                                });
+                              }}
                             />
                             <span className="text-sm text-muted-foreground">{periods[pi as 0 | 1 | 2] ? "Present" : "Absent"}</span>
                           </div>

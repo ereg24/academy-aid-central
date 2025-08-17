@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useSchoolStore } from "@/context/school-store";
 import { useMemo } from "react";
 import { usePageSEO } from "@/lib/seo";
+import { googleSheetsService } from "@/services/googleSheets";
 
 export default function Reports() {
   usePageSEO(
@@ -82,7 +83,19 @@ export default function Reports() {
                     <TableCell className="font-medium">{s.name}</TableCell>
                     <TableCell>${s.fee.toLocaleString()}</TableCell>
                     <TableCell>
-                      <Button variant="secondary" onClick={() => setPaid(s.id, false)}>
+                      <Button 
+                        variant="secondary" 
+                        onClick={async () => {
+                          setPaid(s.id, false);
+                          await googleSheetsService.sendFeePayment({
+                            studentId: s.id,
+                            studentName: s.name,
+                            fee: s.fee,
+                            paid: false,
+                            paymentDate: new Date().toISOString(),
+                          });
+                        }}
+                      >
                         Mark Unpaid
                       </Button>
                     </TableCell>
@@ -121,7 +134,20 @@ export default function Reports() {
                     <TableCell className="font-medium">{s.name}</TableCell>
                     <TableCell>${s.fee.toLocaleString()}</TableCell>
                     <TableCell>
-                      <Button onClick={() => setPaid(s.id, true)}>Mark Paid</Button>
+                      <Button 
+                        onClick={async () => {
+                          setPaid(s.id, true);
+                          await googleSheetsService.sendFeePayment({
+                            studentId: s.id,
+                            studentName: s.name,
+                            fee: s.fee,
+                            paid: true,
+                            paymentDate: new Date().toISOString(),
+                          });
+                        }}
+                      >
+                        Mark Paid
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}

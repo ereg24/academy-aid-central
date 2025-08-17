@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSchoolStore } from "@/context/school-store";
 import { toast } from "sonner";
 import { usePageSEO } from "@/lib/seo";
+import { googleSheetsService } from "@/services/googleSheets";
 
 export default function Register() {
   usePageSEO(
@@ -16,7 +17,7 @@ export default function Register() {
   const { addStudent } = useSchoolStore();
   const [form, setForm] = useState({ name: "", age: "", phone: "", fee: "" });
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const age = Number(form.age);
     const fee = Number(form.fee);
@@ -24,8 +25,17 @@ export default function Register() {
       toast.error("Please provide valid name, age, fee, and 9-digit phone number");
       return;
     }
-    addStudent({ name: form.name, age, phone: `+252${form.phone}`, fee, paid: false });
-    toast.success("Student registered");
+    
+    const studentData = { name: form.name, age, phone: `+252${form.phone}`, fee, paid: false };
+    addStudent(studentData);
+    
+    // Send to Google Sheets
+    await googleSheetsService.sendStudentRegistration({
+      id: `temp_${Date.now()}`, // Will be replaced with actual ID from store
+      ...studentData,
+    });
+    
+    toast.success("Student registered and synced to Google Sheets");
     setForm({ name: "", age: "", phone: "", fee: "" });
   };
 
