@@ -1,4 +1,4 @@
-const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbwTjBszEzyyChXwPGcnKm04NUfr-ASMrbsN2Aby6qn_tisx9yoZHKHs88-9ozH-NWAE/exec";
+const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbzUCQRuApzosyUcTVkUd71iAjhl_SRkWVgx4gZp48-f8tvmPEKvwa8JUeQbQzluycRa/exec";
 
 export interface StudentData {
   id: string;
