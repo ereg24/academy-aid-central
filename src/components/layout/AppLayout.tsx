@@ -1,47 +1,54 @@
 import { Link, NavLink } from "react-router-dom";
 import ThemeToggle from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
+import { Home, UserPlus, Users, DollarSign, FileText, BarChart3 } from "lucide-react";
 
 const navItems = [
-  { to: "/", label: "Dashboard" },
-  { to: "/register", label: "Register" },
-  { to: "/attendance", label: "Attendance" },
-  { to: "/reports", label: "Reports" },
+  { to: "/", label: "Home", icon: Home },
+  { to: "/register", label: "Registration", icon: UserPlus },
+  { to: "/attendance", label: "Attendance", icon: Users },
+  { to: "/reports", label: "Payments", icon: DollarSign },
+  { to: "/reports", label: "Student Management", icon: FileText },
+  { to: "/reports", label: "Reports", icon: BarChart3 },
 ];
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-30 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto flex h-14 items-center justify-between px-4">
-          <Link to="/" className="font-semibold tracking-tight">
-            Academy Aid Central
-          </Link>
-          <nav className="flex items-center gap-1 md:gap-2">
-            {navItems.map((n) => (
+    <div className="min-h-screen bg-background">
+      <header className="border-b bg-background">
+        <div className="flex items-center justify-between px-6 py-4">
+          <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center w-8 h-8 bg-primary rounded-lg">
+              <Home className="w-5 h-5 text-primary-foreground" />
+            </div>
+            <h1 className="text-xl font-semibold text-foreground">SchoolManager</h1>
+          </div>
+          <ThemeToggle />
+        </div>
+        <nav className="border-t">
+          <div className="flex items-center px-6">
+            {navItems.map((item) => (
               <NavLink
-                key={n.to}
-                to={n.to}
-                end={n.to === "/"}
+                key={item.to}
+                to={item.to}
+                end={item.to === "/"}
                 className={({ isActive }) =>
                   cn(
-                    "px-3 py-2 rounded-md text-sm transition-colors",
+                    "flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors",
                     isActive
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
+                      ? "border-primary text-primary bg-primary/5"
+                      : "border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground/50"
                   )
                 }
               >
-                {n.label}
+                <item.icon className="w-4 h-4" />
+                {item.label}
               </NavLink>
             ))}
-          </nav>
-          <div className="flex items-center gap-2">
-            <ThemeToggle />
           </div>
-        </div>
+        </nav>
       </header>
-      <main className="container mx-auto px-4 py-6">
+      <main className="p-6">
         {children}
       </main>
     </div>
