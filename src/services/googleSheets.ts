@@ -21,9 +21,10 @@ export interface AttendanceData {
 export interface FeePaymentData {
   studentId: string;
   studentName: string;
+  amount: number;
   fee: number;
   paid: boolean;
-  paymentDate: string;
+  date: string;
 }
 
 export const googleSheetsService = {
@@ -94,9 +95,10 @@ export const googleSheetsService = {
           data: {
             studentId: payment.studentId,
             studentName: payment.studentName,
+            amount: payment.amount,
             fee: payment.fee,
             paid: payment.paid,
-            paymentDate: payment.paymentDate,
+            paymentDate: payment.date,
             timestamp: new Date().toISOString(),
           },
         }),

@@ -7,6 +7,8 @@ import AppLayout from "@/components/layout/AppLayout";
 import Dashboard from "@/pages/Dashboard";
 import Register from "@/pages/Register";
 import Attendance from "@/pages/Attendance";
+import Payments from "@/pages/Payments";
+import StudentManagement from "@/pages/StudentManagement";
 import Reports from "@/pages/Reports";
 import NotFound from "./pages/NotFound";
 import { ThemeProvider } from "next-themes";
@@ -27,6 +29,8 @@ const App = () => (
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/attendance" element={<Attendance />} />
+                <Route path="/payments" element={<Payments />} />
+                <Route path="/student-management" element={<StudentManagement />} />
                 <Route path="/reports" element={<Reports />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />

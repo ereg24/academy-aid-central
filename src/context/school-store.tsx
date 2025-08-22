@@ -25,6 +25,8 @@ type State = {
 type Action =
   | { type: "ADD_STUDENT"; payload: Omit<Student, "id" | "paid"> & { paid?: boolean } }
   | { type: "SET_PAID"; payload: { studentId: string; paid: boolean } }
+  | { type: "UPDATE_STUDENT"; payload: Student }
+  | { type: "DELETE_STUDENT"; payload: { studentId: string } }
   | { type: "UPSERT_ATTENDANCE"; payload: { studentId: string; date: string; periodIndex: 0 | 1 | 2; present: boolean } };
 
 const initialState: State = {
@@ -61,6 +63,20 @@ function reducer(state: State, action: Action): State {
         students: state.students.map((s) => (s.id === studentId ? { ...s, paid } : s)),
       };
     }
+    case "UPDATE_STUDENT": {
+      return {
+        ...state,
+        students: state.students.map((s) => (s.id === action.payload.id ? action.payload : s)),
+      };
+    }
+    case "DELETE_STUDENT": {
+      const { studentId } = action.payload;
+      return {
+        ...state,
+        students: state.students.filter((s) => s.id !== studentId),
+        attendance: state.attendance.filter((a) => a.studentId !== studentId),
+      };
+    }
     case "UPSERT_ATTENDANCE": {
       const { studentId, date, periodIndex, present } = action.payload;
       const existing = state.attendance.find((a) => a.studentId === studentId && a.date === date);
@@ -86,6 +102,8 @@ const StoreCtx = createContext<{
   state: State;
   addStudent: (data: { name: string; age: number; phone: string; fee: number; paid?: boolean }) => void;
   setPaid: (studentId: string, paid: boolean) => void;
+  updateStudent: (student: Student) => void;
+  deleteStudent: (studentId: string) => void;
   upsertAttendance: (args: { studentId: string; date: string; periodIndex: 0 | 1 | 2; present: boolean }) => void;
 } | null>(null);
 
@@ -108,6 +126,8 @@ export function SchoolStoreProvider({ children }: { children: React.ReactNode })
       addStudent: (data: { name: string; age: number; phone: string; fee: number; paid?: boolean }) =>
         dispatch({ type: "ADD_STUDENT", payload: data }),
       setPaid: (studentId: string, paid: boolean) => dispatch({ type: "SET_PAID", payload: { studentId, paid } }),
+      updateStudent: (student: Student) => dispatch({ type: "UPDATE_STUDENT", payload: student }),
+      deleteStudent: (studentId: string) => dispatch({ type: "DELETE_STUDENT", payload: { studentId } }),
       upsertAttendance: (args: { studentId: string; date: string; periodIndex: 0 | 1 | 2; present: boolean }) =>
         dispatch({ type: "UPSERT_ATTENDANCE", payload: args }),
     }),

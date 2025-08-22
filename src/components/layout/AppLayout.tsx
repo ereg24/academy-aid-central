@@ -7,8 +7,8 @@ const navItems = [
   { to: "/", label: "Home", icon: Home },
   { to: "/register", label: "Registration", icon: UserPlus },
   { to: "/attendance", label: "Attendance", icon: Users },
-  { to: "/reports", label: "Payments", icon: DollarSign },
-  { to: "/reports", label: "Student Management", icon: FileText },
+  { to: "/payments", label: "Payments", icon: DollarSign },
+  { to: "/student-management", label: "Student Management", icon: FileText },
   { to: "/reports", label: "Reports", icon: BarChart3 },
 ];
 

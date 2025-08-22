@@ -90,9 +90,10 @@ export default function Reports() {
                           await googleSheetsService.sendFeePayment({
                             studentId: s.id,
                             studentName: s.name,
+                            amount: s.fee,
                             fee: s.fee,
                             paid: false,
-                            paymentDate: new Date().toISOString(),
+                            date: new Date().toISOString(),
                           });
                         }}
                       >
@@ -140,9 +141,10 @@ export default function Reports() {
                           await googleSheetsService.sendFeePayment({
                             studentId: s.id,
                             studentName: s.name,
+                            amount: s.fee,
                             fee: s.fee,
                             paid: true,
-                            paymentDate: new Date().toISOString(),
+                            date: new Date().toISOString(),
                           });
                         }}
                       >
