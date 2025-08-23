@@ -67,7 +67,7 @@ export default function Reports() {
                 <TableRow>
                   <TableHead>Name</TableHead>
                   <TableHead>Fee</TableHead>
-                  <TableHead>Action</TableHead>
+                  <TableHead>Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -83,22 +83,9 @@ export default function Reports() {
                     <TableCell className="font-medium">{s.name}</TableCell>
                     <TableCell>${s.fee.toLocaleString()}</TableCell>
                     <TableCell>
-                      <Button 
-                        variant="secondary" 
-                        onClick={async () => {
-                          setPaid(s.id, false);
-                          await googleSheetsService.sendFeePayment({
-                            studentId: s.id,
-                            studentName: s.name,
-                            amount: s.fee,
-                            fee: s.fee,
-                            paid: false,
-                            date: new Date().toISOString(),
-                          });
-                        }}
-                      >
-                        Mark Unpaid
-                      </Button>
+                      <span className="text-xs bg-success/10 text-success px-2 py-1 rounded-full">
+                        Paid
+                      </span>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -119,7 +106,7 @@ export default function Reports() {
                 <TableRow>
                   <TableHead>Name</TableHead>
                   <TableHead>Fee</TableHead>
-                  <TableHead>Action</TableHead>
+                  <TableHead>Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -135,21 +122,9 @@ export default function Reports() {
                     <TableCell className="font-medium">{s.name}</TableCell>
                     <TableCell>${s.fee.toLocaleString()}</TableCell>
                     <TableCell>
-                      <Button 
-                        onClick={async () => {
-                          setPaid(s.id, true);
-                          await googleSheetsService.sendFeePayment({
-                            studentId: s.id,
-                            studentName: s.name,
-                            amount: s.fee,
-                            fee: s.fee,
-                            paid: true,
-                            date: new Date().toISOString(),
-                          });
-                        }}
-                      >
-                        Mark Paid
-                      </Button>
+                      <span className="text-xs bg-destructive/10 text-destructive px-2 py-1 rounded-full">
+                        Unpaid
+                      </span>
                     </TableCell>
                   </TableRow>
                 ))}
