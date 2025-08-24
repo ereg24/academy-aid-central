@@ -10,9 +10,12 @@ import Attendance from "@/pages/Attendance";
 import Payments from "@/pages/Payments";
 import StudentManagement from "@/pages/StudentManagement";
 import Reports from "@/pages/Reports";
+import Login from "@/pages/Login";
 import NotFound from "./pages/NotFound";
 import { ThemeProvider } from "next-themes";
 import { SchoolStoreProvider } from "@/context/school-store";
+import { AuthProvider } from "@/context/auth-context";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -23,20 +26,57 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <SchoolStoreProvider>
-            <AppLayout>
+          <AuthProvider>
+            <SchoolStoreProvider>
               <Routes>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/attendance" element={<Attendance />} />
-                <Route path="/payments" element={<Payments />} />
-                <Route path="/student-management" element={<StudentManagement />} />
-                <Route path="/reports" element={<Reports />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/" element={
+                  <ProtectedRoute>
+                    <AppLayout>
+                      <Dashboard />
+                    </AppLayout>
+                  </ProtectedRoute>
+                } />
+                <Route path="/register" element={
+                  <ProtectedRoute requiredRole="admin">
+                    <AppLayout>
+                      <Register />
+                    </AppLayout>
+                  </ProtectedRoute>
+                } />
+                <Route path="/attendance" element={
+                  <ProtectedRoute>
+                    <AppLayout>
+                      <Attendance />
+                    </AppLayout>
+                  </ProtectedRoute>
+                } />
+                <Route path="/payments" element={
+                  <ProtectedRoute requiredRole="admin">
+                    <AppLayout>
+                      <Payments />
+                    </AppLayout>
+                  </ProtectedRoute>
+                } />
+                <Route path="/student-management" element={
+                  <ProtectedRoute requiredRole="admin">
+                    <AppLayout>
+                      <StudentManagement />
+                    </AppLayout>
+                  </ProtectedRoute>
+                } />
+                <Route path="/reports" element={
+                  <ProtectedRoute requiredRole="admin">
+                    <AppLayout>
+                      <Reports />
+                    </AppLayout>
+                  </ProtectedRoute>
+                } />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
-            </AppLayout>
-          </SchoolStoreProvider>
+            </SchoolStoreProvider>
+          </AuthProvider>
         </ThemeProvider>
       </BrowserRouter>
     </TooltipProvider>

@@ -1,5 +1,6 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { Home, UserPlus, Users, DollarSign, FileText, BarChart3 } from "lucide-react";
+import { Home, UserPlus, Users, DollarSign, FileText, BarChart3, Shield, Clock, Calendar } from "lucide-react";
+import { useAuth } from "@/context/auth-context";
 import {
   Sidebar,
   SidebarContent,
@@ -12,30 +13,49 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-const items = [
-  { title: "Dashboard", url: "/", icon: Home },
-  { title: "Registration", url: "/register", icon: UserPlus },
-  { title: "Attendance", url: "/attendance", icon: Users },
-  { title: "Payments", url: "/payments", icon: DollarSign },
-  { title: "Student Management", url: "/student-management", icon: FileText },
-  { title: "Reports", url: "/reports", icon: BarChart3 },
-];
-
 export function AppSidebar() {
+  const { user } = useAuth();
   const { state } = useSidebar();
   const location = useLocation();
   const currentPath = location.pathname;
   
+  // Menu items based on user role
+  const adminItems = [
+    { title: "Dashboard", url: "/", icon: Home },
+    { title: "Registration", url: "/register", icon: UserPlus },
+    { title: "Attendance", url: "/attendance", icon: Calendar },
+    { title: "Payments", url: "/payments", icon: DollarSign },
+    { title: "Student Management", url: "/student-management", icon: FileText },
+    { title: "Reports", url: "/reports", icon: BarChart3 },
+  ];
+
+  const attendanceItems = [
+    { title: "Dashboard", url: "/", icon: Home },
+    { title: "Attendance", url: "/attendance", icon: Calendar },
+  ];
+
+  const items = user?.role === 'admin' ? adminItems : attendanceItems;
+  
   const isActive = (path: string) => currentPath === path;
   const getNavCls = ({ isActive }: { isActive: boolean }) =>
-    isActive ? "bg-sidebar-accent text-sidebar-accent-foreground" : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground";
+    isActive ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium border-r-2 border-sidebar-primary" : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-all duration-200";
 
   return (
-    <Sidebar className="border-r">
+    <Sidebar className="border-r border-border/40">
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="text-sidebar-primary font-semibold">
-            School Management
+          <SidebarGroupLabel className="text-sidebar-primary font-semibold flex items-center gap-2">
+            {user?.role === 'admin' ? (
+              <>
+                <Shield className="w-4 h-4" />
+                Full Access
+              </>
+            ) : (
+              <>
+                <Clock className="w-4 h-4" />
+                Attendance Only
+              </>
+            )}
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
